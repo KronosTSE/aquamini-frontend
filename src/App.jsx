@@ -7,9 +7,9 @@ const user = window.Telegram.WebApp.initDataUnsafe?.user
 if (user){
 if (!name) setName(user.first_name || '')
 }
-}catch(e){}
+}catch(e){
 }
-},[])
+},[]);
 
 
 const BACKEND = import.meta.env.VITE_BACKEND_URL || 'https://aquamini-backend.onrender.com'
