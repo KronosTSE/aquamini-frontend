@@ -1,57 +1,18 @@
-body {
-  margin: 0;
-  font-family: sans-serif;
-  background: #f2f6ff;
-}
-
-.container {
-  max-width: 400px;
-  margin: 30px auto;
-  padding: 20px;
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-h1 {
-  font-size: 22px;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-label {
-  display: block;
-  margin: 10px 0 5px;
-  font-size: 14px;
-}
-
-input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 10px;
-  font-size: 16px;
-  margin-bottom: 10px;
-}
-
-button {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  background: #1a73e8;
-  color: white;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-button:disabled {
-  background: #7aa7ff;
-}
-
-.success {
-  text-align: center;
-  color: green;
-  margin-top: 15px;
-  font-weight: bold;
-}
+:root{ --primary:#0b76ff; --muted:#f2f6ff }
+body{ margin:0; font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial }
+.app{ max-width:420px; margin:18px auto; padding:12px }
+.card{ background:white; border-radius:14px; padding:18px; box-shadow:0 8px 30px rgba(10,20,40,0.06) }
+h2,h3{ margin:0 0 12px }
+input{ width:100%; padding:10px; border-radius:10px; border:1px solid #e6eefb; margin-bottom:8px }
+button{ padding:10px 12px; border-radius:10px; border:none; background:var(--primary); color:white; cursor:pointer }
+button.ghost{ background:transparent; color:#333; border:1px solid #eee }
+.bottle-controls{ display:flex; align-items:center; gap:10px; justify-content:center }
+.bottle-controls button{ padding:8px 12px }
+.quick{ display:flex; gap:8px; justify-content:center; margin-top:8px }
+.quick-btn{ padding:8px 10px; border-radius:8px; background:#eef6ff; border:1px solid #dcefff }
+.actions{ display:flex; gap:8px; margin-top:12px }
+.time-row{ padding:10px; border-radius:10px; border:1px solid #eee; margin-bottom:8px }
+.time-row.active{ background:#eef6ff; border-color:#cde3ff }
+.summary{ background:#f8fbff; padding:10px; border-radius:8px; margin-bottom:12px }
+.result.ok{ color:green; margin-top:10px }
+.result.err{ color:red; margin-top:10px }
