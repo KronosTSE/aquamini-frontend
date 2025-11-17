@@ -1,73 +1,93 @@
 import { useEffect, useState } from "react";
 
 function App() {
+  const tg = window.Telegram?.WebApp;
+  const backend = import.meta.env.VITE_BACKEND_URL;
+
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [bottles, setBottles] = useState(1);
-  const backend = import.meta.env.VITE_BACKEND_URL;
 
+  // Инициализация Telegram Mini App
   useEffect(() => {
-    try {
-      if (window.Telegram?.WebApp) {
-        window.Telegram.WebApp.ready();
-      }
-    } catch (e) {
-      console.log(e);
+    if (tg) {
+      tg.ready();
+      tg.expand();
+      tg.MainButton.setText("Отправить заказ");
+      tg.MainButton.hide();
+
+      // Авто-заполнение имени
+      const userName = tg.initDataUnsafe?.user?.first_name;
+      if (userName) setName(userName);
     }
   }, []);
 
+  // Обработчик отправки заказа
   const sendOrder = async () => {
     const res = await fetch(`${backend}/order`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, address, bottles })
+      body: JSON.stringify({ name, address, bottles }),
     });
-
     const data = await res.json();
-    if (data.ok) alert("Заказ отправлен!");
-    else alert("Ошибка отправки");
+
+    if (data.ok) {
+      tg.close();
+    } else {
+      alert("Ошибка при отправке заказа");
+    }
   };
 
+  // Логика отображения кнопки Telegram
+  useEffect(() => {
+    if (tg) {
+      if (name && address && bottles >= 1) {
+        tg.MainButton.show();
+        tg.MainButton.onClick(sendOrder);
+      } else {
+        tg.MainButton.hide();
+      }
+    }
+  }, [name, address, bottles]);
+
   return (
-    <div style={{ padding: 20, fontFamily: "Arial" }}>
-      <h2>Aquamarin — заказ воды</h2>
+    <div style={{ padding: 20, fontFamily: "Arial", color: tg?.themeParams.text_color }}>
+      <h2>Заказ воды Aquamarin</h2>
 
-      <input
-        placeholder="Ваше имя"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-        style={{ width: "100%", padding: 10, marginBottom: 10 }}
-      />
+      <div style={{ marginBottom: 10 }}>
+        <label>Имя:</label>
+        <input
+          style={{ width: "100%", padding: 10, marginTop: 5 }}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Ваше имя"
+        />
+      </div>
 
-      <input
-        placeholder="Адрес доставки"
-        value={address}
-        onChange={(e) => setAddress(e.target.value)}
-        style={{ width: "100%", padding: 10, marginBottom: 10 }}
-      />
+      <div style={{ marginBottom: 10 }}>
+        <label>Адрес:</label>
+        <input
+          style={{ width: "100%", padding: 10, marginTop: 5 }}
+          value={address}
+          onChange={(e) => setAddress(e.target.value)}
+          placeholder="Адрес доставки"
+        />
+      </div>
 
-      <input
-        type="number"
-        min="1"
-        value={bottles}
-        onChange={(e) => setBottles(e.target.value)}
-        style={{ width: "100%", padding: 10, marginBottom: 10 }}
-      />
+      <div style={{ marginBottom: 10 }}>
+        <label>Количество бутылей:</label>
+        <input
+          type="number"
+          min="1"
+          style={{ width: "100%", padding: 10, marginTop: 5 }}
+          value={bottles}
+          onChange={(e) => setBottles(e.target.value)}
+        />
+      </div>
 
-      <button
-        onClick={sendOrder}
-        style={{
-          width: "100%",
-          padding: 15,
-          background: "#0088ff",
-          color: "white",
-          border: "none",
-          borderRadius: 8,
-          fontSize: 18,
-        }}
-      >
-        Сделать заказ
-      </button>
+      <div style={{ marginTop: 20, opacity: 0.5 }}>
+        Кнопка "Отправить заказ" появится снизу, когда все поля заполнены.
+      </div>
     </div>
   );
 }
