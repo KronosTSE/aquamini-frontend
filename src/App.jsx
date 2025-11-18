@@ -149,10 +149,9 @@ export default function App() {
       <div style={{ marginTop: 14, color: "#555", fontSize: 14 }}>{info}</div>
 
       <pre style={{ marginTop: 16, fontSize: 12, color: "#666" }}>
-        tg detected: {String(tgReady)}{"
-"}
-        backend: {backend}
-      </pre>
+  tg detected: {String(tgReady)}{"\n"}
+  backend: {backend}
+</pre>
     </div>
   );
 }
