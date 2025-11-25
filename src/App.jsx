@@ -18,29 +18,36 @@ export default function App() {
   useEffect(() => { addressRef.current = address }, [address]);
   useEffect(() => { bottlesRef.current = bottles }, [bottles]);
 
-  useEffect(() => {
-    const tgObj = window.Telegram?.WebApp;
-    if (tgObj) {
+useEffect(() => {
+  const tgObj = window.Telegram?.WebApp;
+  if (tgObj) {
+    try {
+      // ✅ Сначала инициализация
+      tgObj.ready();
+      tgObj.expand();
+      
       setTg(tgObj);
       setTgReady(true);
-
-      try {
-        tgObj.ready();
-        tgObj.expand();
-        tgObj.MainButton.setText("Отправить заказ");
-        tgObj.MainButton.hide();
-      } catch (e) {}
-
+      
+      // ✅ Теперь безопасно получаем данные
       const user = tgObj.initDataUnsafe?.user;
+      console.log("Telegram user data:", tgObj.initDataUnsafe); // Отладка
+      
       if (user) {
         const fullName = [user.first_name, user.last_name].filter(Boolean).join(" ");
-        setName(fullName);
+        setName(fullName || user.username || "");
       }
-    } else {
-      setTgReady(false);
-      setInfo("Mini App открыт не в Telegram — кнопка отправки не появится.");
+      
+      tgObj.MainButton.setText("Отправить заказ");
+      tgObj.MainButton.hide();
+    } catch (e) {
+      console.error("Telegram init error:", e);
     }
-  }, []);
+  } else {
+    setTgReady(false);
+    setInfo("Mini App открыт не в Telegram — кнопка отправки не появится.");
+  }
+}, []);
 
   const sendOrder = async () => {
     const payload = {
